@@ -14,8 +14,6 @@ pipeline {
                 checkout scm
                 sh "rm -rf brbuild_ios" //This removes the previous checkout of brbuild_ios if it exists.
                 sh "rm -rf ios/fastlane/brbuild_ios" //This removes the brbuild_ios from the fastlane directory if it somehow still exists
-                sh "GIT_SSH_COMMAND='ssh -i ~/.ssh/ios_dependencies' git clone --depth 1 git@bitbucket.org:BottleRocket/brbuild_ios.git" //This checks out the brbuild_ios library from BottleRocket's Bitbucket
-                sh "mv brbuild_ios ios/fastlane" //This moves the just checked out brbuild_ios to the fastlane directory for easier importing
             }
         }
         stage ('Flutter Doctor') {
