@@ -14,10 +14,13 @@ pipeline {
                 checkout scm
                 sh "rm -rf brbuild_ios" //This removes the previous checkout of brbuild_ios if it exists.
                 sh "rm -rf ios/fastlane/brbuild_ios" //This removes the brbuild_ios from the fastlane directory if it somehow still exists
+                sh "pwd"
+                sh "ls"
             }
         }
         stage ('Flutter Doctor') {
             steps {
+                sh "pwd && ls && echo $PATH"
                 sh "flutter doctor -v"
             }
         }
