@@ -1,63 +1,22 @@
-def appname = "Runner" //DON'T CHANGE THIS. This refers to the flutter 'Runner' target.
-def xcarchive = "${appname}.xcarchive"
+def label = "Flutter_v2020_05"
 
-pipeline {
-    agent { label 'Flutter_v2020_05' } //Change this to whatever your flutter jenkins nodes are labeled.
-    environment {
-        DEVELOPER_DIR="/Applications/Xcode.app/Contents/Developer/"  //This is necessary for Fastlane to access iOS Build things.
+podTemplate(label: label, containers: [
+  containerTemplate(name: 'flutter', image: 'cirrusci/flutter:stable', command: 'cat', ttyEnabled: true)
+],
+volumes: [
+  hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')
+]) {
+  node(label) {
+    def myRepo = checkout scm
+    def gitCommit = myRepo.GIT_COMMIT
+    def gitBranch = myRepo.GIT_BRANCH
+    def shortGitCommit = "${gitCommit[0..10]}"
+    def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
+ 
+    stage('Run helm') {
+      container('flutter') {
+        sh "flutter doctor"
+      }
     }
-    stages {
-        stage ('Checkout') {
-            steps {
-                step([$class: 'WsCleanup'])
-                checkout scm
-                sh "rm -rf brbuild_ios" //This removes the previous checkout of brbuild_ios if it exists.
-                sh "rm -rf ios/fastlane/brbuild_ios" //This removes the brbuild_ios from the fastlane directory if it somehow still exists
-            }
-        }
-        stage ('Flutter Doctor') {
-            container('flutter') {
-                sh "pwd && ls && echo $PATH && whoami"
-                sh "flutter doctor -v"
-            }
-        }
-        stage ('Run Flutter Tests') {
-            steps {
-                sh "flutter test --coverage test/logic_tests.dart"
-            }
-        }
-        stage ('Flutter Build APK') {
-            steps {
-                sh "flutter build apk --split-per-abi"
-            }
-        }
-        stage('Distribute Android APK') {
-            steps {
-                appCenter apiToken: 'API_TOKEN_HERE',
-                        ownerName: 'OWNER_NAME',
-                        appName: 'APP_NAME',
-                        pathToApp: 'build/app/outputs/apk/release/app-arm64-v8a-release.apk',
-                        distributionGroups: 'DISTRIBUTION_GROUP'
-            }
-        }
-        stage('Flutter Build iOS') {
-            steps {
-                sh "flutter build ios --release --no-codesign"
-            }
-        }
-        stage('Make iOS IPA And Distribute') {
-                steps {
-                    dir('ios'){
-                            sh "bundle install"
-                            sh "bundle exec fastlane buildAdHoc --verbose"
-                    }
-                }
-        }
-        stage('Cleanup') {
-            steps {
-                sh "flutter clean"
-            }
-        }
-    }
+  }
 }
-
