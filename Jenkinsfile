@@ -19,17 +19,17 @@ volumes: [
       }
     }
     stage('Run flutter test') {
-      conainer('flutter') {
+      container('flutter') {
         sh "flutter test --coverage test/widget_test.dart"
       }
     }
     stage('Run flutter Build') {
-      conainer('flutter') {
+      container('flutter') {
         sh "flutter build apk --split-per-abi"
       }
     }
     stage('Run flutter Build ios') {
-      conainer('flutter') {
+      container('flutter') {
         sh "flutter build ios --release --no-codesign"
       }
     }
