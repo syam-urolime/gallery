@@ -25,7 +25,7 @@ volumes: [
 // #    }
     stage('Run flutter Build') {
       container('flutter') {
-        sh "flutter build"
+        sh "flutter build apk"
       }
     }
   }
