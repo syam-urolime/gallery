@@ -19,6 +19,7 @@ pipeline {
         stage ('Flutter Doctor') {
             steps {
                 sh "pwd && ls && echo $PATH && whoami"
+                sh "su root"
                 sh "flutter doctor -v"
             }
         }
