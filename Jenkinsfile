@@ -18,7 +18,7 @@ pipeline {
         }
         stage ('Flutter Doctor') {
             steps {
-                sh "pwd && ls && echo $PATH && whoami && ls /sdks/flutter/bin/flutter"
+                sh "pwd && ls && echo $PATH && whoami && ls /Users/jenkins/Documents/flutter/bin/"
                 sh "/sdks/flutter/bin/flutter doctor -v"
             }
         }
