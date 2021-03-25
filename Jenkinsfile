@@ -18,11 +18,11 @@ volumes: [
         sh "flutter doctor"
       }
     }
-#    stage('Run flutter test') {
-#      container('flutter') {
-#        sh "flutter test --coverage test/widget_test.dart"
-#      }
-#    }
+// #    stage('Run flutter test') {
+// #      container('flutter') {
+// #        sh "flutter test --coverage test/widget_test.dart"
+// #      }
+// #    }
     stage('Run flutter Build') {
       container('flutter') {
         sh "flutter build apk --split-per-abi"
