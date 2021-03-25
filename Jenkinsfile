@@ -25,12 +25,7 @@ volumes: [
 // #    }
     stage('Run flutter Build') {
       container('flutter') {
-        sh "flutter build apk --split-per-abi"
-      }
-    }
-    stage('Run flutter Build ios') {
-      container('flutter') {
-        sh "flutter build ios --release --no-codesign"
+        sh "flutter build"
       }
     }
   }
