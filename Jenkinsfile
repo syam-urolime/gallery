@@ -16,7 +16,7 @@ pipeline {
             }
         }
         stage ('Flutter Doctor') {
-            steps {
+            container('flutter') {
                 sh "pwd && ls && echo $PATH && whoami"
                 sh "flutter doctor -v"
             }
